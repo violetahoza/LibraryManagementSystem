@@ -1,0 +1,21 @@
+[
+  {
+    "Id": "2868351b-f4c8-4709-b2b8-a5323e1d9739",
+    "Title": "1984",
+    "Author": "George Orwell",
+    "ISBN": "978-0-451-52493-5",
+    "PublicationYear": 1949,
+    "Publisher": "Secker \u0026 Warburg",
+    "Genre": "dystopian novel",
+    "TotalQuantity": 50,
+    "AvailableQuantity": 50,
+    "AddedDate": "2025-05-08T13:28:09.1751421+03:00",
+    "LastBorrowedDate": null,
+    "BorrowCount": 0,
+    "Tags": [
+      "dystopian",
+      "political fiction",
+      "social science fiction"
+    ]
+  }
+]

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loans - Library Management System</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #1a75ff;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            display: inline-block;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0 1rem;
+        }
+        
+        nav ul li {
+            padding: 1rem;
+        }
+        
+        nav ul li a {
+            color: #495057;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #1a75ff;
+        }
+        
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 160px);
+        }
+        
+        section {
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            margin-bottom: 1rem;
+            color: #343a40;
+            border-bottom: 2px solid #1a75ff;
+            padding-bottom: 0.5rem;
+        }
+        
+        /* Loan Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .tab.active {
+            border-bottom-color: #1a75ff;
+            color: #1a75ff;
+        }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        /* Status markers */
+        .status-active {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .status-returned {
+            color: #6c757d;
+        }
+        
+        .status-overdue {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #1a75ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background-color: #bd2130;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: #f8f9fa;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                padding: 0.5rem 1rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+            
+            .tab {
+                border-bottom: 1px solid #ddd;
+                border-left: 2px solid transparent;
+            }
+            
+            .tab.active {
+                border-bottom-color: #ddd;
+                border-left-color: #1a75ff;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Library Management System</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="loans.html">Loans</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="recommendations.html">Recommendations</a></li>
+                <li><a href="notifications.html">Notifications</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <h2>Loans</h2>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="all">All Loans</div>
+                <div class="tab" data-tab="active">Active Loans</div>
+                <div class="tab" data-tab="overdue">Overdue Loans</div>
+            </div>
+            
+            <div id="loading" class="loading">Loading loans...</div>
+            
+            <div id="all-loans-content" class="tab-content">
+                <table id="all-loans-table">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Patron</th>
+                            <th>Borrow Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="all-loans-body">
+                        <!-- Loans will be loaded dynamically -->
+                    </tbody>
+                </table>
+                <div id="all-loans-empty" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📚</div>
+                    <h3>No Loans Found</h3>
+                    <p>There are no loans in the system yet.</p>
+                    <p><a href="books.html" class="btn btn-success">Browse Books</a></p>
+                </div>
+            </div>
+            
+            <div id="active-loans-content" class="tab-content" style="display: none;">
+                <table id="active-loans-table">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Patron</th>
+                            <th>Borrow Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="active-loans-body">
+                        <!-- Active loans will be loaded dynamically -->
+                    </tbody>
+                </table>
+                <div id="active-loans-empty" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📚</div>
+                    <h3>No Active Loans</h3>
+                    <p>There are no active loans in the system.</p>
+                    <p><a href="books.html" class="btn btn-success">Browse Books</a></p>
+                </div>
+            </div>
+            
+            <div id="overdue-loans-content" class="tab-content" style="display: none;">
+                <table id="overdue-loans-table">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Patron</th>
+                            <th>Borrow Date</th>
+                            <th>Due Date</th>
+                            <th>Days Overdue</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="overdue-loans-body">
+                        <!-- Overdue loans will be loaded dynamically -->
+                    </tbody>
+                </table>
+                <div id="overdue-loans-empty" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">✅</div>
+                    <h3>No Overdue Loans</h3>
+                    <p>There are no overdue loans at this time. Great job!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 - Library Management System - Siemens Internship Project</p>
+        </div>
+    </footer>
+
+    <!-- Include the API client -->
+    <script src="api.js"></script>
+    
+    <!-- Page-specific JavaScript -->
+    <script>
+        // Global variables to store loans data
+        let allLoans = [];
+        let activeLoans = [];
+        let overdueLoans = [];
+        
+        // Load all types of loans
+        async function loadLoans() {
+            try {
+                document.getElementById('loading').style.display = 'block';
+                
+                // Load all loans types
+                allLoans = await LoanAPI.getAllLoans();
+                activeLoans = await LoanAPI.getActiveLoans();
+                overdueLoans = await LoanAPI.getOverdueLoans();
+                
+                // Hide loading indicator
+                document.getElementById('loading').style.display = 'none';
+                
+                // Populate the tables
+                populateAllLoansTable();
+                populateActiveLoansTable();
+                populateOverdueLoansTable();
+                
+                // Show the active tab content
+                showTabContent(document.querySelector('.tab.active').dataset.tab);
+            } catch (error) {
+                console.error('Error loading loans:', error);
+                document.getElementById('loading').textContent = 'Error loading loans. Please try again later.';
+            }
+        }
+        
+        // Populate All Loans table
+        function populateAllLoansTable() {
+            const tbody = document.getElementById('all-loans-body');
+            tbody.innerHTML = '';
+            
+            if (allLoans.length === 0) {
+                document.getElementById('all-loans-table').style.display = 'none';
+                document.getElementById('all-loans-empty').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('all-loans-table').style.display = 'table';
+            document.getElementById('all-loans-empty').style.display = 'none';
+            
+            allLoans.forEach(loan => {
+                const tr = document.createElement('tr');
+                
+                // Determine status class
+                let statusClass = 'status-active';
+                let statusText = 'Active';
+                
+                if (loan.isReturned) {
+                    statusClass = 'status-returned';
+                    statusText = `Returned on ${formatDate(loan.returnDate)}`;
+                } else if (new Date(loan.dueDate) < new Date()) {
+                    statusClass = 'status-overdue';
+                    statusText = 'Overdue';
+                }
+                
+                tr.innerHTML = `
+                    <td>${loan.bookId}</td>
+                    <td>${loan.patronName} (${loan.patronEmail})</td>
+                    <td>${formatDate(loan.borrowDate)}</td>
+                    <td>${formatDate(loan.dueDate)}</td>
+                    <td class="${statusClass}">${statusText}</td>
+                    <td>
+                        ${!loan.isReturned ? 
+                            `<button class="btn btn-success btn-sm return-loan-btn" data-loan-id="${loan.id}">Return</button>` :
+                            'Already returned'}
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Add event listeners to return buttons
+            document.querySelectorAll('.return-loan-btn').forEach(button => {
+                button.addEventListener('click', handleReturnLoan);
+            });
+        }
+        
+        // Populate Active Loans table
+        function populateActiveLoansTable() {
+            const tbody = document.getElementById('active-loans-body');
+            tbody.innerHTML = '';
+            
+            if (activeLoans.length === 0) {
+                document.getElementById('active-loans-table').style.display = 'none';
+                document.getElementById('active-loans-empty').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('active-loans-table').style.display = 'table';
+            document.getElementById('active-loans-empty').style.display = 'none';
+            
+            activeLoans.forEach(loan => {
+                const tr = document.createElement('tr');
+                
+                // Determine status class
+                let statusClass = 'status-active';
+                let statusText = 'Active';
+                
+                if (new Date(loan.dueDate) < new Date()) {
+                    statusClass = 'status-overdue';
+                    statusText = 'Overdue';
+                }
+                
+                tr.innerHTML = `
+                    <td>${loan.bookId}</td>
+                    <td>${loan.patronName} (${loan.patronEmail})</td>
+                    <td>${formatDate(loan.borrowDate)}</td>
+                    <td>${formatDate(loan.dueDate)}</td>
+                    <td class="${statusClass}">${statusText}</td>
+                    <td>
+                        <button class="btn btn-success btn-sm return-loan-btn" data-loan-id="${loan.id}">Return</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Add event listeners to return buttons
+            document.querySelectorAll('.return-loan-btn').forEach(button => {
+                button.addEventListener('click', handleReturnLoan);
+            });
+        }
+        
+        // Populate Overdue Loans table
+        function populateOverdueLoansTable() {
+            const tbody = document.getElementById('overdue-loans-body');
+            tbody.innerHTML = '';
+            
+            if (overdueLoans.length === 0) {
+                document.getElementById('overdue-loans-table').style.display = 'none';
+                document.getElementById('overdue-loans-empty').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('overdue-loans-table').style.display = 'table';
+            document.getElementById('overdue-loans-empty').style.display = 'none';
+            
+            overdueLoans.forEach(loan => {
+                const tr = document.createElement('tr');
+                
+                // Calculate days overdue
+                const today = new Date();
+                const dueDate = new Date(loan.dueDate);
+                const daysOverdue = Math.floor((today - dueDate) / (1000 * 60 * 60 * 24));
+                
+                tr.innerHTML = `
+                    <td>${loan.bookId}</td>
+                    <td>${loan.patronName} (${loan.patronEmail})</td>
+                    <td>${formatDate(loan.borrowDate)}</td>
+                    <td>${formatDate(loan.dueDate)}</td>
+                    <td class="status-overdue">${daysOverdue} day${daysOverdue !== 1 ? 's' : ''}</td>
+                    <td>
+                        <button class="btn btn-success btn-sm return-loan-btn" data-loan-id="${loan.id}">Return</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(tr);
+            });
+            
+            // Add event listeners to return buttons
+            document.querySelectorAll('.return-loan-btn').forEach(button => {
+                button.addEventListener('click', handleReturnLoan);
+            });
+        }
+        
+        // Handle loan return
+        async function handleReturnLoan(event) {
+            const loanId = event.target.dataset.loanId;
+            
+            try {
+                // Disable the button
+                event.target.disabled = true;
+                event.target.textContent = 'Processing...';
+                
+                // Return the loan
+                const result = await LoanAPI.returnBook(loanId);
+                
+                // Show success message
+                alert(result.message || 'Book returned successfully.');
+                
+                // Reload loans data
+                loadLoans();
+            } catch (error) {
+                console.error('Error returning book:', error);
+                alert('Error returning book: ' + (error.message || 'Please try again.'));
+                
+                // Re-enable the button
+                event.target.disabled = false;
+                event.target.textContent = 'Return';
+            }
+        }
+        
+        // Switch between tabs
+        function showTabContent(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Show the selected tab content
+            document.getElementById(`${tabId}-loans-content`).style.display = 'block';
+            
+            // Update active tab styling
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+        }
+        
+        // Tab click handler
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                showTabContent(tab.dataset.tab);
+            });
+        });
+        
+        // Load loans when the page loads
+        document.addEventListener('DOMContentLoaded', loadLoans);
+    </script>
+</body>
+</html>

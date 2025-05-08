@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Books - Library Management System</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #1a75ff;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            display: inline-block;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0 1rem;
+        }
+        
+        nav ul li {
+            padding: 1rem;
+        }
+        
+        nav ul li a {
+            color: #495057;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #1a75ff;
+        }
+        
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 160px);
+        }
+        
+        section {
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            margin-bottom: 1rem;
+            color: #343a40;
+            border-bottom: 2px solid #1a75ff;
+            padding-bottom: 0.5rem;
+        }
+        
+        /* Search Box */
+        .search-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .search-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .search-select {
+            width: 150px;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        /* Results */
+        .results-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+        
+        .result-count {
+            margin-bottom: 1rem;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .book-result {
+            display: flex;
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+            transition: background-color 0.3s;
+        }
+        
+        .book-result:last-child {
+            border-bottom: none;
+        }
+        
+        .book-result:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .book-info {
+            flex-grow: 1;
+        }
+        
+        .book-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #1a75ff;
+        }
+        
+        .book-title a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .book-title a:hover {
+            text-decoration: underline;
+        }
+        
+        .book-meta {
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .book-availability {
+            align-self: center;
+            margin-left: 1rem;
+            white-space: nowrap;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+            display: none;
+        }
+        
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+            display: none;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .badge-success {
+            background-color: #28a745;
+        }
+        
+        .badge-danger {
+            background-color: #dc3545;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1rem;
+            background-color: #1a75ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: #f8f9fa;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                padding: 0.5rem 1rem;
+            }
+            
+            .search-input-group {
+                flex-direction: column;
+            }
+            
+            .search-select {
+                width: 100%;
+            }
+            
+            .book-result {
+                flex-direction: column;
+            }
+            
+            .book-availability {
+                margin-left: 0;
+                margin-top: 1rem;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Library Management System</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="loans.html">Loans</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="recommendations.html">Recommendations</a></li>
+                <li><a href="notifications.html">Notifications</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <h2>Search Books</h2>
+            
+            <div class="search-container">
+                <form class="search-form" id="search-form">
+                    <div class="search-input-group">
+                        <input type="text" id="search-term" class="search-input" placeholder="Enter search term...">
+                        <select id="search-by" class="search-select">
+                            <option value="all">All Fields</option>
+                            <option value="title">Title</option>
+                            <option value="author">Author</option>
+                            <option value="isbn">ISBN</option>
+                            <option value="genre">Genre</option>
+                            <option value="tags">Tags</option>
+                        </select>
+                        <button type="submit" class="btn">Search</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="loading" class="loading">Searching books...</div>
+            
+            <div id="no-results" class="no-results">No books found matching your search criteria.</div>
+            
+            <div class="results-container" id="results-container" style="display: none;">
+                <div class="result-count" id="result-count">Found 0 books matching your search</div>
+                
+                <div id="search-results">
+                    <!-- Search results will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 - Library Management System - Siemens Internship Project</p>
+        </div>
+    </footer>
+
+    <!-- Include the API client -->
+    <script src="api.js"></script>
+    
+    <!-- Page-specific JavaScript -->
+    <script>
+        // Handle search form submission
+        document.getElementById('search-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const searchTerm = document.getElementById('search-term').value.trim();
+            const searchBy = document.getElementById('search-by').value;
+            
+            if (!searchTerm) {
+                alert('Please enter a search term.');
+                return;
+            }
+            
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('no-results').style.display = 'none';
+            document.getElementById('results-container').style.display = 'none';
+            
+            try {
+                // Search books
+                const books = await BookAPI.searchBooks(searchTerm, searchBy);
+                
+                // Hide loading indicator
+                document.getElementById('loading').style.display = 'none';
+                
+                if (books.length === 0) {
+                    // No results found
+                    document.getElementById('no-results').style.display = 'block';
+                    return;
+                }
+                
+                // Display results
+                document.getElementById('result-count').textContent = `Found ${books.length} books matching your search`;
+                document.getElementById('results-container').style.display = 'block';
+                
+                const searchResultsElement = document.getElementById('search-results');
+                searchResultsElement.innerHTML = '';
+                
+                books.forEach(book => {
+                    const resultElement = document.createElement('div');
+                    resultElement.className = 'book-result';
+                    
+                    resultElement.innerHTML = `
+                        <div class="book-info">
+                            <div class="book-title">
+                                <a href="book-details.html?id=${book.id}">${book.title}</a>
+                            </div>
+                            <div class="book-meta">
+                                <span>by ${book.author}</span> ${book.publicationYear ? `| <span>${book.publicationYear}</span>` : ''} ${book.genre ? `| <span>${book.genre}</span>` : ''}
+                            </div>
+                            <div class="book-tags">
+                                Tags: ${book.tags && book.tags.length > 0 ? book.tags.join(', ') : 'None'}
+                            </div>
+                        </div>
+                        <div class="book-availability">
+                            <span class="badge ${book.availableQuantity > 0 ? 'badge-success' : 'badge-danger'}">
+                                ${book.availableQuantity}/${book.totalQuantity} available
+                            </span>
+                            <br>
+                            ${book.availableQuantity > 0 
+                                ? `<a href="borrow-book.html?id=${book.id}" class="btn btn-success">Borrow</a>`
+                                : `<a class="btn" style="opacity: 0.5; cursor: not-allowed; background-color: #6c757d;">Unavailable</a>`
+                            }
+                        </div>
+                    `;
+                    
+                    searchResultsElement.appendChild(resultElement);
+                });
+            } catch (error) {
+                console.error('Error searching books:', error);
+                document.getElementById('loading').style.display = 'none';
+                alert('Error searching books. Please try again later.');
+            }
+        });
+        
+        // Check if there's a search term in the URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchTerm = urlParams.get('term');
+            const searchBy = urlParams.get('by') || 'all';
+            
+            if (searchTerm) {
+                // Populate the search form
+                document.getElementById('search-term').value = searchTerm;
+                document.getElementById('search-by').value = searchBy;
+                
+                // Submit the form
+                document.getElementById('search-form').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>

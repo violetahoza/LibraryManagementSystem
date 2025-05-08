@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details - Library Management System</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #1a75ff;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            display: inline-block;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0 1rem;
+        }
+        
+        nav ul li {
+            padding: 1rem;
+        }
+        
+        nav ul li a {
+            color: #495057;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #1a75ff;
+        }
+        
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 160px);
+        }
+        
+        section {
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            margin-bottom: 1rem;
+            color: #343a40;
+            border-bottom: 2px solid #1a75ff;
+            padding-bottom: 0.5rem;
+        }
+        
+        /* Book Details */
+        .detail-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .book-details {
+            flex: 2 1 500px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+        
+        .book-sidebar {
+            flex: 1 1 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .book-actions, .related-books {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+        }
+        
+        .book-header {
+            background-color: #1a75ff;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px 8px 0 0;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+        }
+        
+        .actions-header {
+            background-color: #28a745;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px 8px 0 0;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+        }
+        
+        .related-header {
+            background-color: #fd7e14;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px 8px 0 0;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+        }
+        
+        .book-detail {
+            margin-bottom: 0.5rem;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            width: 150px;
+            flex-shrink: 0;
+        }
+        
+        .detail-value {
+            flex-grow: 1;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1rem;
+            background-color: #1a75ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin: 5px 0;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .badge-success {
+            background-color: #28a745;
+        }
+        
+        .badge-danger {
+            background-color: #dc3545;
+        }
+        
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .tag {
+            background-color: #6c757d;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            height: 10px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background-color: #1a75ff;
+            height: 100%;
+        }
+        
+        /* Related Books List */
+        .related-list {
+            list-style: none;
+        }
+        
+        .related-list li {
+            padding: 0.75rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .related-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .related-list a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .related-title {
+            font-weight: bold;
+            color: #1a75ff;
+        }
+        
+        .related-author {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+        
+        /* Header actions */
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: #f8f9fa;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                padding: 0.5rem 1rem;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .book-detail {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                width: 100%;
+                margin-bottom: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Library Management System</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="loans.html">Loans</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="recommendations.html">Recommendations</a></li>
+                <li><a href="notifications.html">Notifications</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <div class="header-actions">
+                <h2>Book Details</h2>
+                <a href="books.html" class="btn btn-secondary">← Back to Books</a>
+            </div>
+            
+            <div id="loading" class="loading">
+                Loading book details...
+            </div>
+            
+            <div id="book-container" class="detail-container" style="display: none;">
+                <div class="book-details">
+                    <div class="book-header">
+                        <h3 id="book-title">Book Title</h3>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">Author:</div>
+                        <div class="detail-value" id="book-author">Author Name</div>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">ISBN:</div>
+                        <div class="detail-value" id="book-isbn">ISBN Number</div>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">Publication Year:</div>
+                        <div class="detail-value" id="book-year">Year</div>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">Publisher:</div>
+                        <div class="detail-value" id="book-publisher">Publisher Name</div>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">Genre:</div>
+                        <div class="detail-value" id="book-genre">Genre</div>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">Availability:</div>
+                        <div class="detail-value" id="book-availability">
+                            <span class="badge badge-success">Available</span>
+                        </div>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">Tags:</div>
+                        <div class="detail-value">
+                            <div class="tags" id="book-tags">
+                                <!-- Tags will be loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">Added Date:</div>
+                        <div class="detail-value" id="book-added-date">Date</div>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">Last Borrowed:</div>
+                        <div class="detail-value" id="book-last-borrowed">Date</div>
+                    </div>
+                    
+                    <div class="book-detail">
+                        <div class="detail-label">Popularity:</div>
+                        <div class="detail-value">
+                            <span id="book-popularity">Borrowed 0 times</span>
+                            <div class="progress-container">
+                                <div class="progress-bar" id="book-popularity-bar" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="book-sidebar">
+                    <div class="book-actions">
+                        <div class="actions-header">
+                            <h3>Actions</h3>
+                        </div>
+                        
+                        <div id="borrow-button-container">
+                            <!-- Borrow button will be added dynamically -->
+                        </div>
+                        <a id="edit-book-link" href="#" class="btn btn-block">Edit Book</a>
+                        <a id="recommendations-link" href="#" class="btn btn-block">Find Similar Books</a>
+                    </div>
+                    
+                    <div class="related-books" id="related-books-container" style="display: none;">
+                        <div class="related-header">
+                            <h3>Related Books</h3>
+                        </div>
+                        
+                        <ul class="related-list" id="related-books-list">
+                            <!-- Related books will be loaded dynamically -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 - Library Management System - Siemens Internship Project</p>
+        </div>
+    </footer>
+
+    <!-- Include the API client -->
+    <script src="api.js"></script>
+    
+    <!-- Page-specific JavaScript -->
+    <script>
+        // Get book ID from URL parameter
+        const bookId = getUrlParameter('id');
+        
+        // Load book details
+        async function loadBookDetails() {
+            if (!bookId) {
+                document.getElementById('loading').textContent = 'Error: No book ID specified.';
+                return;
+            }
+            
+            try {
+                // Load book details
+                const book = await BookAPI.getBookById(bookId);
+                
+                if (!book) {
+                    document.getElementById('loading').textContent = 'Error: Book not found.';
+                    return;
+                }
+                
+                // Hide loading indicator and show book details
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('book-container').style.display = 'flex';
+                
+                // Populate book details
+                document.getElementById('book-title').textContent = book.title;
+                document.getElementById('book-author').textContent = book.author || '-';
+                document.getElementById('book-isbn').textContent = book.isbn || '-';
+                document.getElementById('book-year').textContent = book.publicationYear || '-';
+                document.getElementById('book-publisher').textContent = book.publisher || '-';
+                document.getElementById('book-genre').textContent = book.genre || '-';
+                
+                // Availability badge
+                const availabilityElement = document.getElementById('book-availability');
+                if (book.availableQuantity > 0) {
+                    availabilityElement.innerHTML = `<span class="badge badge-success">${book.availableQuantity} out of ${book.totalQuantity} copies available</span>`;
+                } else {
+                    availabilityElement.innerHTML = `<span class="badge badge-danger">0 out of ${book.totalQuantity} copies available</span>`;
+                }
+                
+                // Tags
+                const tagsElement = document.getElementById('book-tags');
+                tagsElement.innerHTML = '';
+                if (book.tags && book.tags.length > 0) {
+                    book.tags.forEach(tag => {
+                        const tagSpan = document.createElement('span');
+                        tagSpan.className = 'tag';
+                        tagSpan.textContent = tag;
+                        tagsElement.appendChild(tagSpan);
+                    });
+                } else {
+                    tagsElement.textContent = 'No tags';
+                }
+                
+                // Dates
+                document.getElementById('book-added-date').textContent = formatDate(book.addedDate);
+                document.getElementById('book-last-borrowed').textContent = formatDate(book.lastBorrowedDate);
+                
+                // Popularity
+                document.getElementById('book-popularity').textContent = `Borrowed ${book.borrowCount} times`;
+                // Set progress bar width (max at 20 borrows)
+                const popularityPercentage = Math.min(book.borrowCount * 5, 100);
+                document.getElementById('book-popularity-bar').style.width = `${popularityPercentage}%`;
+                
+                // Action buttons
+                const borrowButtonContainer = document.getElementById('borrow-button-container');
+                if (book.availableQuantity > 0) {
+                    borrowButtonContainer.innerHTML = `<a href="borrow-book.html?id=${book.id}" class="btn btn-success btn-block">Borrow Book</a>`;
+                } else {
+                    borrowButtonContainer.innerHTML = `<a class="btn btn-block" style="opacity: 0.5; cursor: not-allowed; background-color: #6c757d;">Currently Unavailable</a>`;
+                }
+                
+                document.getElementById('edit-book-link').href = `edit-book.html?id=${book.id}`;
+                document.getElementById('recommendations-link').href = `recommendations.html?bookId=${book.id}`;
+                
+                // Load related books
+                loadRelatedBooks(book.id);
+            } catch (error) {
+                console.error('Error loading book details:', error);
+                document.getElementById('loading').textContent = 'Error loading book details. Please try again later.';
+            }
+        }
+        
+        // Load related books
+        async function loadRelatedBooks(bookId) {
+            try {
+                const relatedBooks = await BookAPI.getRelatedBooks(bookId);
+                
+                if (relatedBooks.length === 0) {
+                    return; // No related books, hide the section
+                }
+                
+                // Show the related books container
+                document.getElementById('related-books-container').style.display = 'block';
+                
+                // Populate related books list
+                const relatedBooksList = document.getElementById('related-books-list');
+                relatedBooksList.innerHTML = '';
+                
+                relatedBooks.forEach(book => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <a href="book-details.html?id=${book.id}">
+                            <div class="related-title">${book.title}</div>
+                            <div class="related-author">by ${book.author} (${book.publicationYear || 'N/A'})</div>
+                        </a>
+                    `;
+                    relatedBooksList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error loading related books:', error);
+            }
+        }
+        
+        // Call the function when the page loads
+        document.addEventListener('DOMContentLoaded', loadBookDetails);
+    </script>
+</body>
+</html>

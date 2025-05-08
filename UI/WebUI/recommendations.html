@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations - Library Management System</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #1a75ff;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            display: inline-block;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0 1rem;
+        }
+        
+        nav ul li {
+            padding: 1rem;
+        }
+        
+        nav ul li a {
+            color: #495057;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #1a75ff;
+        }
+        
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 160px);
+        }
+        
+        section {
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            margin-bottom: 1rem;
+            color: #343a40;
+            border-bottom: 2px solid #1a75ff;
+            padding-bottom: 0.5rem;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .tab.active {
+            border-bottom-color: #1a75ff;
+            color: #1a75ff;
+        }
+        
+        /* Book Cards */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 1.5rem;
+        }
+        
+        .book-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .book-card-header {
+            padding: 1rem;
+            background-color: #1a75ff;
+            color: white;
+        }
+        
+        .book-card-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .book-card-author {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .book-card-body {
+            padding: 1rem;
+        }
+        
+        .book-card-info {
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .book-card-info-label {
+            font-weight: bold;
+            color: #6c757d;
+        }
+        
+        .book-card-actions {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* Related Books Search */
+        .related-search {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .related-search-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .related-search-input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1rem;
+            background-color: #1a75ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #1a75ff;
+            color: #1a75ff;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f0f7ff;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            height: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-bar {
+            background-color: #1a75ff;
+            height: 100%;
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .badge-success {
+            background-color: #28a745;
+        }
+        
+        .badge-danger {
+            background-color: #dc3545;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: #f8f9fa;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                padding: 0.5rem 1rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+            
+            .tab {
+                border-bottom: 1px solid #ddd;
+                border-left: 2px solid transparent;
+            }
+            
+            .tab.active {
+                border-bottom-color: #ddd;
+                border-left-color: #1a75ff;
+            }
+            
+            .related-search-form {
+                flex-direction: column;
+            }
+            
+            .book-card-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Library Management System</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="loans.html">Loans</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="recommendations.html">Recommendations</a></li>
+                <li><a href="notifications.html">Notifications</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <h2>Recommendations</h2>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="popular">Popular Books</div>
+                <div class="tab" data-tab="related">Related Books</div>
+            </div>
+            
+            <!-- Popular Books Tab -->
+            <div id="popular-content" class="tab-content">
+                <p>These are the most popular books in the library based on borrowing history.</p>
+                
+                <div id="popular-loading" class="loading">Loading popular books...</div>
+                
+                <div id="popular-empty" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📚</div>
+                    <h3>No Books Yet</h3>
+                    <p>Once books are borrowed, popular titles will appear here.</p>
+                </div>
+                
+                <div class="books-grid" id="popular-books-grid">
+                    <!-- Popular books will be loaded dynamically -->
+                </div>
+            </div>
+            
+            <!-- Related Books Tab -->
+            <div id="related-content" class="tab-content" style="display: none;">
+                <div class="related-search">
+                    <p>Find books similar to ones you've enjoyed.</p>
+                    <form id="related-search-form" class="related-search-form">
+                        <input type="text" id="related-search-input" class="related-search-input" placeholder="Search for a book to find similar titles...">
+                        <button type="submit" class="btn">Find Related Books</button>
+                    </form>
+                </div>
+                
+                <div id="book-search-results" style="display: none;">
+                    <h3>Select a book to find similar titles:</h3>
+                    <div class="books-grid" id="search-results-grid">
+                        <!-- Search results will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <div id="related-loading" class="loading" style="display: none;">Loading related books...</div>
+                
+                <div id="related-results" style="display: none;">
+                    <h3>Books similar to: <span id="reference-book-title"></span></h3>
+                    <div class="books-grid" id="related-books-grid">
+                        <!-- Related books will be loaded dynamically -->
+                    </div>
+                </div>
+                
+                <div id="related-empty" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">🔍</div>
+                    <h3>No Related Books</h3>
+                    <p>We couldn't find any books similar to this one.</p>
+                </div>
+                
+                <!-- If bookId is passed in URL, this will show automatically -->
+                <div id="specific-related-loading" class="loading" style="display: none;">Loading related books...</div>
+                
+                <div id="specific-related-results" style="display: none;">
+                    <h3>Books similar to: <span id="specific-reference-book-title"></span></h3>
+                    <div class="books-grid" id="specific-related-books-grid">
+                        <!-- Related books will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 - Library Management System - Siemens Internship Project</p>
+        </div>
+    </footer>
+
+    <!-- Include the API client -->
+    <script src="api.js"></script>
+    
+    <!-- Page-specific JavaScript -->
+    <script>
+        // Load popular books
+        async function loadPopularBooks() {
+            try {
+                document.getElementById('popular-loading').style.display = 'block';
+                document.getElementById('popular-empty').style.display = 'none';
+                document.getElementById('popular-books-grid').innerHTML = '';
+                
+                const books = await BookAPI.getPopularBooks(10);
+                
+                document.getElementById('popular-loading').style.display = 'none';
+                
+                if (books.length === 0) {
+                    document.getElementById('popular-empty').style.display = 'block';
+                    return;
+                }
+                
+                const booksGrid = document.getElementById('popular-books-grid');
+                
+                books.forEach((book, index) => {
+                    const bookCard = createBookCard(book, index + 1);
+                    booksGrid.appendChild(bookCard);
+                });
+            } catch (error) {
+                console.error('Error loading popular books:', error);
+                document.getElementById('popular-loading').textContent = 'Error loading popular books. Please try again later.';
+            }
+        }
+        
+        // Create a book card element
+        function createBookCard(book, rank = null) {
+            const card = document.createElement('div');
+            card.className = 'book-card';
+            
+            // Calculate popularity percentage for progress bar
+            const popularityPercentage = Math.min(book.borrowCount * 5, 100);
+            
+            // Determine availability badge
+            const availabilityBadge = book.availableQuantity > 0 
+                ? `<span class="badge badge-success">${book.availableQuantity}/${book.totalQuantity} available</span>`
+                : `<span class="badge badge-danger">0/${book.totalQuantity} available</span>`;
+            
+            card.innerHTML = `
+                <div class="book-card-header">
+                    <div class="book-card-title">${rank ? `#${rank} - ` : ''}${book.title}</div>
+                    <div class="book-card-author">by ${book.author}</div>
+                </div>
+                <div class="book-card-body">
+                    <div class="book-card-info">
+                        <span class="book-card-info-label">Genre:</span>
+                        <span>${book.genre || 'Not specified'}</span>
+                    </div>
+                    <div class="book-card-info">
+                        <span class="book-card-info-label">Published:</span>
+                        <span>${book.publicationYear || 'Unknown'}</span>
+                    </div>
+                    <div class="book-card-info">
+                        <span class="book-card-info-label">Borrowed:</span>
+                        <span>${book.borrowCount} times</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: ${popularityPercentage}%"></div>
+                    </div>
+                </div>
+                <div class="book-card-actions">
+                    <a href="book-details.html?id=${book.id}" class="btn btn-sm btn-outline">Details</a>
+                    ${book.availableQuantity > 0 
+                        ? `<a href="borrow-book.html?id=${book.id}" class="btn btn-sm btn-success">Borrow</a>`
+                        : `<button disabled class="btn btn-sm" style="opacity: 0.5; cursor: not-allowed;">Unavailable</button>`
+                    }
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Search books for related titles search
+        async function searchBooks(term) {
+            try {
+                document.getElementById('book-search-results').style.display = 'none';
+                document.getElementById('related-loading').style.display = 'block';
+                
+                const books = await BookAPI.searchBooks(term);
+                
+                document.getElementById('related-loading').style.display = 'none';
+                
+                if (books.length === 0) {
+                    alert('No books found matching your search.');
+                    return;
+                }
+                
+                const searchResultsGrid = document.getElementById('search-results-grid');
+                searchResultsGrid.innerHTML = '';
+                
+                books.forEach(book => {
+                    const card = document.createElement('div');
+                    card.className = 'book-card';
+                    
+                    card.innerHTML = `
+                        <div class="book-card-header">
+                            <div class="book-card-title">${book.title}</div>
+                            <div class="book-card-author">by ${book.author}</div>
+                        </div>
+                        <div class="book-card-body">
+                            <div class="book-card-info">
+                                <span class="book-card-info-label">Genre:</span>
+                                <span>${book.genre || 'Not specified'}</span>
+                            </div>
+                            <div class="book-card-info">
+                                <span class="book-card-info-label">Published:</span>
+                                <span>${book.publicationYear || 'Unknown'}</span>
+                            </div>
+                        </div>
+                        <div class="book-card-actions">
+                            <button class="btn btn-sm find-related-btn" data-book-id="${book.id}" data-book-title="${book.title}">
+                                Find Similar Books
+                            </button>
+                        </div>
+                    `;
+                    
+                    searchResultsGrid.appendChild(card);
+                });
+                
+                // Add event listeners to Find Similar Books buttons
+                document.querySelectorAll('.find-related-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const bookId = button.dataset.bookId;
+                        const bookTitle = button.dataset.bookTitle;
+                        loadRelatedBooks(bookId, bookTitle);
+                    });
+                });
+                
+                document.getElementById('book-search-results').style.display = 'block';
+            } catch (error) {
+                console.error('Error searching books:', error);
+                document.getElementById('related-loading').style.display = 'none';
+                alert('Error searching books. Please try again later.');
+            }
+        }
+        
+        // Load related books
+        async function loadRelatedBooks(bookId, bookTitle) {
+            try {
+                // Reset UI
+                document.getElementById('book-search-results').style.display = 'none';
+                document.getElementById('related-results').style.display = 'none';
+                document.getElementById('related-empty').style.display = 'none';
+                document.getElementById('related-loading').style.display = 'block';
+                
+                // Get related books
+                const books = await BookAPI.getRelatedBooks(bookId);
+                
+                document.getElementById('related-loading').style.display = 'none';
+                
+                if (books.length === 0) {
+                    document.getElementById('related-empty').style.display = 'block';
+                    return;
+                }
+                
+                // Set reference book title
+                document.getElementById('reference-book-title').textContent = bookTitle;
+                
+                // Populate related books grid
+                const relatedBooksGrid = document.getElementById('related-books-grid');
+                relatedBooksGrid.innerHTML = '';
+                
+                books.forEach(book => {
+                    const bookCard = createBookCard(book);
+                    relatedBooksGrid.appendChild(bookCard);
+                });
+                
+                document.getElementById('related-results').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading related books:', error);
+                document.getElementById('related-loading').style.display = 'none';
+                alert('Error loading related books. Please try again later.');
+            }
+        }
+        
+        // Check if bookId was passed in URL
+        async function checkForSpecificBook() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookId = urlParams.get('bookId');
+            
+            if (bookId) {
+                // Show related tab
+                document.querySelector('.tab[data-tab="related"]').click();
+                
+                try {
+                    document.getElementById('specific-related-loading').style.display = 'block';
+                    
+                    // Get the book details
+                    const book = await BookAPI.getBookById(bookId);
+                    
+                    if (!book) {
+                        document.getElementById('specific-related-loading').style.display = 'none';
+                        alert('Book not found.');
+                        return;
+                    }
+                    
+                    // Get related books
+                    const relatedBooks = await BookAPI.getRelatedBooks(bookId);
+                    
+                    document.getElementById('specific-related-loading').style.display = 'none';
+                    
+                    if (relatedBooks.length === 0) {
+                        document.getElementById('related-empty').style.display = 'block';
+                        return;
+                    }
+                    
+                    // Set reference book title
+                    document.getElementById('specific-reference-book-title').textContent = book.title;
+                    
+                    // Populate related books grid
+                    const relatedBooksGrid = document.getElementById('specific-related-books-grid');
+                    relatedBooksGrid.innerHTML = '';
+                    
+                    relatedBooks.forEach(relatedBook => {
+                        const bookCard = createBookCard(relatedBook);
+                        relatedBooksGrid.appendChild(bookCard);
+                    });
+                    
+                    document.getElementById('specific-related-results').style.display = 'block';
+                } catch (error) {
+                    console.error('Error loading specific book:', error);
+                    document.getElementById('specific-related-loading').style.display = 'none';
+                    alert('Error loading book information. Please try again later.');
+                }
+            }
+        }
+        
+        // Tab switching
+        function showTabContent(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Show the selected tab content
+            document.getElementById(`${tabId}-content`).style.display = 'block';
+            
+            // Update active tab styling
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load popular books
+            loadPopularBooks();
+            
+            // Check if specific book was requested
+            checkForSpecificBook();
+            
+            // Tab click handler
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    showTabContent(tab.dataset.tab);
+                });
+            });
+            
+            // Related books search form
+            document.getElementById('related-search-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const searchTerm = document.getElementById('related-search-input').value.trim();
+                
+                if (!searchTerm) {
+                    alert('Please enter a search term.');
+                    return;
+                }
+                
+                searchBooks(searchTerm);
+            });
+        });
+    </script>
+</body>
+</html>

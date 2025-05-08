@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Library Management System</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: #1a75ff;
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            display: inline-block;
+        }
+        
+        /* Navigation */
+        nav {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0 1rem;
+        }
+        
+        nav ul li {
+            padding: 1rem;
+        }
+        
+        nav ul li a {
+            color: #495057;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #1a75ff;
+        }
+        
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 160px);
+        }
+        
+        section {
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            margin-bottom: 1rem;
+            color: #343a40;
+            border-bottom: 2px solid #1a75ff;
+            padding-bottom: 0.5rem;
+        }
+        
+        /* Notifications */
+        .notifications-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .notification-to {
+            font-weight: bold;
+        }
+        
+        .notification-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .notification-message {
+            margin-bottom: 0.5rem;
+        }
+        
+        .notification-status {
+            font-size: 0.9rem;
+        }
+        
+        /* Notification types */
+        .notification-overdue {
+            border-left: 4px solid #dc3545;
+            background-color: #fff8f8;
+        }
+        
+        .notification-recommendation {
+            border-left: 4px solid #28a745;
+            background-color: #f8fff8;
+        }
+        
+        .notification-reservation {
+            border-left: 4px solid #fd7e14;
+            background-color: #fffaf5;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1rem;
+            background-color: #1a75ff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .badge-success {
+            background-color: #28a745;
+        }
+        
+        .badge-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+        
+        /* Header actions */
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        /* Alert */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #343a40;
+            color: #f8f9fa;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                padding: 0.5rem 1rem;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .notification-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Library Management System</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="loans.html">Loans</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="recommendations.html">Recommendations</a></li>
+                <li><a href="notifications.html">Notifications</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main>
+        <div class="container">
+            <div class="header-actions">
+                <h2>Notifications</h2>
+                <button id="send-all-btn" class="btn btn-success">Send All Notifications</button>
+            </div>
+            
+            <div id="success-alert" class="alert alert-success">
+                All notifications have been sent successfully!
+            </div>
+            
+            <div id="loading" class="loading">
+                Loading notifications...
+            </div>
+            
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">🔔</div>
+                <h3>No Notifications</h3>
+                <p>There are no pending notifications at this time.</p>
+            </div>
+            
+            <div id="notifications-container" class="notifications-container" style="display: none;">
+                <div id="notifications-list">
+                    <!-- Notifications will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 - Library Management System - Siemens Internship Project</p>
+        </div>
+    </footer>
+
+    <!-- Include the API client -->
+    <script src="api.js"></script>
+    
+    <!-- Page-specific JavaScript -->
+    <script>
+        // Load notifications
+        async function loadNotifications() {
+            try {
+                const notifications = await NotificationAPI.getNotifications();
+                
+                // Hide loading indicator
+                document.getElementById('loading').style.display = 'none';
+                
+                if (notifications.length === 0) {
+                    // Show empty state
+                    document.getElementById('empty-state').style.display = 'block';
+                    document.getElementById('send-all-btn').disabled = true;
+                    document.getElementById('send-all-btn').style.opacity = '0.5';
+                    return;
+                }
+                
+                // Show notifications container
+                document.getElementById('notifications-container').style.display = 'block';
+                
+                // Populate notifications
+                const notificationsList = document.getElementById('notifications-list');
+                notificationsList.innerHTML = '';
+                
+                notifications.forEach(notification => {
+                    // Determine notification type based on message content
+                    let notificationType = 'notification-recommendation';
+                    if (notification.message.includes('OVERDUE')) {
+                        notificationType = 'notification-overdue';
+                    } else if (notification.message.includes('RESERVATION')) {
+                        notificationType = 'notification-reservation';
+                    }
+                    
+                    const notificationItem = document.createElement('div');
+                    notificationItem.className = `notification-item ${notificationType}`;
+                    
+                    notificationItem.innerHTML = `
+                        <div class="notification-header">
+                            <div class="notification-to">To: ${notification.patronEmail}</div>
+                            <div class="notification-date">Created: ${formatDate(notification.createdDate)}</div>
+                        </div>
+                        <div class="notification-message">${notification.message}</div>
+                        <div class="notification-status">
+                            Status: <span class="badge ${notification.isSent ? 'badge-success' : 'badge-warning'}">
+                                ${notification.isSent ? 'Sent' : 'Pending'}
+                            </span>
+                        </div>
+                    `;
+                    
+                    notificationsList.appendChild(notificationItem);
+                });
+                
+                // Update send all button state
+                const pendingNotifications = notifications.filter(n => !n.isSent);
+                if (pendingNotifications.length === 0) {
+                    document.getElementById('send-all-btn').disabled = true;
+                    document.getElementById('send-all-btn').style.opacity = '0.5';
+                } else {
+                    document.getElementById('send-all-btn').disabled = false;
+                    document.getElementById('send-all-btn').style.opacity = '1';
+                }
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                document.getElementById('loading').textContent = 'Error loading notifications. Please try again later.';
+            }
+        }
+        
+        // Send all notifications
+        async function sendAllNotifications() {
+            try {
+                // Disable button
+                const sendButton = document.getElementById('send-all-btn');
+                sendButton.disabled = true;
+                sendButton.textContent = 'Sending...';
+                
+                // Send notifications
+                await NotificationAPI.sendNotifications();
+                
+                // Show success message
+                document.getElementById('success-alert').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('success-alert').style.display = 'none';
+                }, 3000);
+                
+                // Reload notifications
+                sendButton.textContent = 'Send All Notifications';
+                loadNotifications();
+            } catch (error) {
+                console.error('Error sending notifications:', error);
+                alert('Error sending notifications: ' + error.message);
+                
+                // Re-enable button
+                const sendButton = document.getElementById('send-all-btn');
+                sendButton.disabled = false;
+                sendButton.textContent = 'Send All Notifications';
+            }
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', loadNotifications);
+        document.getElementById('send-all-btn').addEventListener('click', sendAllNotifications);
+    </script>
+</body>
+</html>
