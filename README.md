@@ -54,3 +54,86 @@ dotnet build
 
 # Run the application
 dotnet run
+```
+## Configuration
+The application uses JSON files to store data, which are saved in a "Data" directory:
+* `books.json`: Stores information about all books
+* `loans.json`: Stores records of all book loans
+
+The application will automatically:
+1. Create the Data directory if it doesn't exist
+2. Create empty JSON files if they don't exist
+3. Load sample data on first run if the books repository is empty
+
+## Using the Application
+When you start the application, you'll see a menu with numbered options:
+
+```bash
+===== LIBRARY MANAGEMENT SYSTEM =====
+
+1. View All Books
+2. Add New Book
+3. Update Book
+4. Delete Book
+5. Search Books
+6. Lend Book
+7. Return Book
+8. Get Book Recommendations
+9. Exit
+```
+### 1. View All Books
+Displays a table with all books in the library, including their ID, title, author, ISBN, and availability status.
+
+### 2. Add New Book
+Prompts you to enter details for a new book:
+* Title
+* Author
+* ISBN
+* Genre
+* Publication Year
+* Quantity
+
+### 3. Update Book
+1. Enter the ID of the book you want to update
+2. Review current details
+3. Enter new values for any fields you want to update (leave blank to keep current value)
+
+### 4. Delete Book
+1. Enter the ID of the book you want to delete
+2. Confirm deletion
+3. Note: Books with active loans cannot be deleted
+
+### 5. Search Books
+1. Choose a filter type:
+   * Title
+   * Author
+   * ISBN
+   * Genre
+   * Available Books Only
+   * All Fields
+2. Enter your search term (if applicable)
+3. View results
+
+### 6. Lend Book
+1. Enter the ID of the book to lend
+2. Enter the borrower's name
+3. The system will update availability and create a loan record
+
+### 7. Return Book
+1. Enter the ID of the book being returned
+2. Enter the borrower's name
+3. The system will validate the loan and update records
+
+### 8. Get Book Recommendations
+1. Enter a borrower's name
+2. The system will analyze their borrowing history and recommend similar books based on genre and author preferences. Here's how it works:
+- The system analyzes the borrower's past loan records to identify:
+   * Genres they have shown interest in
+   * Authors they have previously read
+- It then identifies available books that match these preferences but that the borrower hasn't read yet.
+- The system ranks and presents up to five recommended books that align with the borrower's reading preferences.
+
+This feature helps enhance the user experience by:
+* Encouraging exploration of new books within familiar genres
+* Introducing readers to more works by authors they enjoy
+* Increasing circulation of books by matching them with interested readers
