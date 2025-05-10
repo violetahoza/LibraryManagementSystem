@@ -1,0 +1,57 @@
+[
+  {
+    "id": "a7b9ca46-8413-4349-b407-1a7f51634c98",
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "isbn": "9780743273565",
+    "quantity": 5,
+    "availableQuantity": 5,
+    "genre": "Classic",
+    "publicationYear": 1925,
+    "dateAdded": "2025-05-10T20:32:24.5463103+03:00"
+  },
+  {
+    "id": "0bae52fc-07b0-44ce-badf-da5a219c6404",
+    "title": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "isbn": "9780061120084",
+    "quantity": 3,
+    "availableQuantity": 3,
+    "genre": "Fiction",
+    "publicationYear": 1960,
+    "dateAdded": "2025-05-10T20:32:24.5549122+03:00"
+  },
+  {
+    "id": "763f2ca1-f018-483e-92b7-125c89a8c454",
+    "title": "1984",
+    "author": "George Orwell",
+    "isbn": "9780451524935",
+    "quantity": 4,
+    "availableQuantity": 4,
+    "genre": "Dystopian",
+    "publicationYear": 1949,
+    "dateAdded": "2025-05-10T20:32:24.5549172+03:00"
+  },
+  {
+    "id": "a23cf83e-393a-4103-b6e8-e857af12ec43",
+    "title": "Pride and Prejudice",
+    "author": "Jane Austen",
+    "isbn": "9780679783268",
+    "quantity": 10,
+    "availableQuantity": 10,
+    "genre": "Romance",
+    "publicationYear": 1913,
+    "dateAdded": "2025-05-10T20:32:45.9490615+03:00"
+  },
+  {
+    "id": "f52100d7-c33c-4f60-9b16-a20bcaa44e4f",
+    "title": "Jane Eyre",
+    "author": "Charlotte Bronte",
+    "isbn": "9780142437209",
+    "quantity": 9,
+    "availableQuantity": 8,
+    "genre": "Romance",
+    "publicationYear": 1847,
+    "dateAdded": "2025-05-10T20:33:12.2973318+03:00"
+  }
+]

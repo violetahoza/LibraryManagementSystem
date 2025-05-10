@@ -1,0 +1,11 @@
+[
+  {
+    "id": "112f37e8-37b3-4401-9acd-bb0bbb9b6862",
+    "bookId": "f52100d7-c33c-4f60-9b16-a20bcaa44e4f",
+    "borrowerName": "Violeta Hoza",
+    "borrowDate": "2025-05-10T20:34:33.0091764+03:00",
+    "dueDate": "2025-05-24T20:34:33.0092446+03:00",
+    "returnDate": null,
+    "isReturned": false
+  }
+]
